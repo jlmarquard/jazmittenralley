@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jazzmitten Rally Tracker 🧤🎶</title>
+  <title>Jazzminton Rally Tracker 🧤🎶</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -222,7 +222,7 @@
 <body>
   <header>
     <div>
-      <h1>Jazzmitten Rally Tracker 🧤🎶</h1>
+      <h1>Jazzminton Rally Tracker 🧤🎶</h1>
       <p class="sub">Track each pair’s all-time best rally and watch your family level up over time. Records save on your device (no account, no internet needed).</p>
     </div>
     <div class="pill" id="champsPill" title="Current overall champs">
@@ -316,13 +316,13 @@
   </div>
 
   <script>
-    // Jazzmitten Rally Tracker - single-file, offline, localStorage
+    // Jazzminton Rally Tracker - single-file, offline, localStorage
     // Data model:
     // settings: { names: string[] }
     // records: { [pairKey]: { a, b, best, dateISO, history: [{count, dateISO, ts}] } }
 
-    const LS_SETTINGS = "jazzmitten_settings_v1";
-    const LS_RECORDS   = "jazzmitten_records_v1";
+    const LS_SETTINGS = "Jazzminton_settings_v1";
+    const LS_RECORDS   = "Jazzminton_records_v1";
 
     const DEFAULT_NAMES = ["Jenna", "Brett", "Edison", "Graham", "Forrest"];
 
@@ -406,7 +406,7 @@
 
     function encouragement({ improvedPair, newCount, oldBest, isOverallBest, closeToBest }){
       const cheers = [
-        "Jazzmittens are flying! 🧤💫",
+        "Jazzmintons are flying! 🧤💫",
         "Nice hands! 🎶🧤",
         "Smooth rally energy. 😎",
         "That was snappy! ⚡",
@@ -711,7 +711,7 @@
     }
 
     function resetAll(){
-      const ok = confirm("Reset everything? This erases all saved Jazzmitten records on this phone.");
+      const ok = confirm("Reset everything? This erases all saved Jazzminton records on this phone.");
       if(!ok) return;
       localStorage.removeItem(LS_RECORDS);
       hideMessage();
