@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jazzmitten Rally Tracker 🧤🎶</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --card2:#0f1730;
+      --text:#e9ecff;
+      --muted:#b8c0ffcc;
+      --accent:#7cf7d4;
+      --accent2:#a0b6ff;
+      --warn:#ffd56a;
+      --danger:#ff6b8a;
+      --ok:#8aff9a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 10%, #1b2a66 0%, rgba(27,42,102,0) 60%),
+                  radial-gradient(900px 700px at 90% 20%, #0e6f78 0%, rgba(14,111,120,0) 55%),
+                  linear-gradient(180deg, var(--bg), #070a14 70%);
+      color:var(--text);
+      min-height:100vh;
+      padding:18px;
+    }
+    header{
+      max-width:980px;
+      margin:0 auto 14px auto;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size:20px;
+      margin:0 0 6px 0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .inner{ padding:14px; }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width:860px){
+      .grid{ grid-template-columns: 1.1fr .9fr; }
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 6px;
+    }
+    select,input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,14,30,.55);
+      color:var(--text);
+      outline:none;
+      font-size:15px;
+    }
+    input[type="number"]{ appearance:textfield; }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .row3{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:420px){
+      .row, .row3 { grid-template-columns: 1fr; }
+    }
+    .btnbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    button{
+      border:0;
+      border-radius:14px;
+      padding:11px 13px;
+      font-weight:650;
+      font-size:14px;
+      cursor:pointer;
+      color:#061018;
+      background: linear-gradient(180deg, var(--accent), #53e9c1);
+      box-shadow: 0 10px 20px rgba(124,247,212,.18);
+      transition: transform .06s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active{ transform: translateY(1px); }
+    button.secondary{
+      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      color:var(--text);
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.12);
+    }
+    button.danger{
+      background: linear-gradient(180deg, rgba(255,107,138,.95), rgba(255,107,138,.75));
+      color:#16040a;
+      box-shadow: 0 10px 20px rgba(255,107,138,.12);
+    }
+    .message{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,30,.45);
+      font-size:14px;
+      line-height:1.35;
+    }
+    .message strong{ color:var(--accent); }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,30,.45);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .pill .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--warn);
+      box-shadow: 0 0 0 3px rgba(255,213,106,.12);
+    }
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(10,14,30,.35);
+    }
+    .table th, .table td{
+      text-align:left;
+      padding:10px 10px;
+      font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      vertical-align:middle;
+    }
+    .table th{
+      color:var(--muted);
+      font-weight:650;
+      font-size:12px;
+      background: rgba(255,255,255,.04);
+    }
+    .table tr:last-child td{ border-bottom:none; }
+    .tag{
+      display:inline-block;
+      padding:4px 9px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      white-space:nowrap;
+    }
+    .tag.champs{
+      border-color: rgba(124,247,212,.35);
+      background: rgba(124,247,212,.12);
+      color: #d7fff4;
+    }
+    .small{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .footer{
+      text-align:center;
+      margin:14px auto 2px;
+      color:rgba(233,236,255,.55);
+      font-size:12px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:11px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(233,236,255,.85);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Jazzmitten Rally Tracker 🧤🎶</h1>
+      <p class="sub">Track each pair’s all-time best rally and watch your family level up over time. Records save on your device (no account, no internet needed).</p>
+    </div>
+    <div class="pill" id="champsPill" title="Current overall champs">
+      <span class="dot" id="champsDot"></span>
+      <span id="champsText">Finding champs…</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <section class="card">
+        <div class="inner">
+          <div class="row">
+            <div>
+              <label for="p1">Player 1</label>
+              <select id="p1"></select>
+            </div>
+            <div>
+              <label for="p2">Player 2</label>
+              <select id="p2"></select>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="row">
+            <div>
+              <label for="rally">Rally count</label>
+              <input id="rally" type="number" min="0" inputmode="numeric" placeholder="e.g., 27" />
+            </div>
+            <div>
+              <label for="date">Date</label>
+              <input id="date" type="date" />
+            </div>
+          </div>
+
+          <div class="btnbar">
+            <button id="saveBtn">Save rally</button>
+            <button class="secondary" id="swapBtn" title="Swap the two players">Swap</button>
+            <button class="secondary" id="editNamesBtn" title="Edit family member names">Edit names</button>
+          </div>
+
+          <div class="message" id="messageBox" style="display:none;"></div>
+
+          <div class="small" style="margin-top:10px;">
+            Tip: Add the same pair again later to try to beat their record. 🏆
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="inner">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div>
+              <div style="font-weight:750;">Leaderboard</div>
+              <div class="small">All-time best for each pair (saved on this phone).</div>
+            </div>
+            <div class="btnbar" style="margin:0;">
+              <button class="secondary" id="exportBtn" title="Copy your data as text">Export</button>
+              <button class="danger" id="resetBtn" title="Erase all saved records">Reset</button>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <table class="table" id="board">
+            <thead>
+              <tr>
+                <th>Pair</th>
+                <th>Best</th>
+                <th>Set on</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="boardBody">
+              <!-- rows injected -->
+            </tbody>
+          </table>
+
+          <div class="small" style="margin-top:10px;">
+            Pro move: Try for a “clean 20” with zero drops. Then go for 30. Then… legend status. 😄
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      Works great as a saved file. On iPhone: share → “Add to Home Screen” after opening in Safari. On Android: Chrome menu → “Add to Home screen”.
+      <br/>Keyboard shortcut: press <span class="kbd">Enter</span> in the rally field to save.
+    </div>
+  </div>
+
+  <script>
+    // Jazzmitten Rally Tracker - single-file, offline, localStorage
+    // Data model:
+    // settings: { names: string[] }
+    // records: { [pairKey]: { a, b, best, dateISO, history: [{count, dateISO, ts}] } }
+
+    const LS_SETTINGS = "jazzmitten_settings_v1";
+    const LS_RECORDS   = "jazzmitten_records_v1";
+
+    const DEFAULT_NAMES = ["Jenna", "Brett", "Edison", "Graham", "Forrest"];
+
+    const el = (id) => document.getElementById(id);
+    const p1 = el("p1"), p2 = el("p2"), rally = el("rally"), date = el("date");
+    const msg = el("messageBox");
+    const boardBody = el("boardBody");
+    const champsText = el("champsText");
+    const champsDot = el("champsDot");
+
+    function todayISO(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function loadSettings(){
+      try{
+        const raw = localStorage.getItem(LS_SETTINGS);
+        if(!raw) return { names: DEFAULT_NAMES.slice() };
+        const parsed = JSON.parse(raw);
+        if(!parsed?.names || !Array.isArray(parsed.names) || parsed.names.length < 2){
+          return { names: DEFAULT_NAMES.slice() };
+        }
+        // Ensure unique-ish and trimmed
+        const cleaned = parsed.names.map(n => String(n).trim()).filter(Boolean);
+        return { names: cleaned.length ? cleaned : DEFAULT_NAMES.slice() };
+      } catch {
+        return { names: DEFAULT_NAMES.slice() };
+      }
+    }
+
+    function saveSettings(settings){
+      localStorage.setItem(LS_SETTINGS, JSON.stringify(settings));
+    }
+
+    function loadRecords(){
+      try{
+        const raw = localStorage.getItem(LS_RECORDS);
+        if(!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveRecords(records){
+      localStorage.setItem(LS_RECORDS, JSON.stringify(records));
+    }
+
+    function pairKey(a,b){
+      const [x,y] = [a,b].sort((m,n)=> m.localeCompare(n, undefined, { sensitivity:"base" }));
+      return `${x}__${y}`;
+    }
+
+    function showMessage(html, tone="neutral"){
+      msg.style.display = "block";
+      msg.innerHTML = html;
+
+      // Subtle tone changes
+      const toneStyles = {
+        neutral: "rgba(10,14,30,.45)",
+        win: "rgba(124,247,212,.12)",
+        close: "rgba(255,213,106,.10)",
+        oops: "rgba(255,107,138,.12)"
+      };
+      msg.style.background = toneStyles[tone] || toneStyles.neutral;
+      msg.style.borderColor = "rgba(255,255,255,.10)";
+      if(tone === "win") msg.style.borderColor = "rgba(124,247,212,.35)";
+      if(tone === "oops") msg.style.borderColor = "rgba(255,107,138,.35)";
+      if(tone === "close") msg.style.borderColor = "rgba(255,213,106,.35)";
+    }
+
+    function hideMessage(){
+      msg.style.display = "none";
+      msg.innerHTML = "";
+    }
+
+    function encouragement({ improvedPair, newCount, oldBest, isOverallBest, closeToBest }){
+      const cheers = [
+        "Jazzmittens are flying! 🧤💫",
+        "Nice hands! 🎶🧤",
+        "Smooth rally energy. 😎",
+        "That was snappy! ⚡",
+        "Teamwork upgrade unlocked. 🤝✨"
+      ];
+      const pick = (arr)=> arr[Math.floor(Math.random()*arr.length)];
+
+      if(improvedPair){
+        if(isOverallBest){
+          return {
+            tone:"win",
+            text:`<strong>🏆 NEW OVERALL FAMILY RECORD!</strong><br/>
+                  ${pick(cheers)} You just set the top score with <strong>${newCount}</strong>!`
+          };
+        }
+        return {
+          tone:"win",
+          text:`<strong>🎉 New record for this pair!</strong><br/>
+                Went from <strong>${oldBest}</strong> → <strong>${newCount}</strong>. ${pick(cheers)}`
+        };
+      }
+
+      if(closeToBest){
+        return {
+          tone:"close",
+          text:`So close! 😄 You hit <strong>${newCount}</strong>. The pair record is <strong>${oldBest}</strong> — keep rallying, you’ve got this!`
+        };
+      }
+
+      return {
+        tone:"neutral",
+        text:`Saved! You logged <strong>${newCount}</strong>. ${pick(cheers)} Want to try again and chase that record?`
+      };
+    }
+
+    function computeOverallChamps(records){
+      let best = -Infinity;
+      let bestKey = null;
+      for(const [k,v] of Object.entries(records)){
+        if(typeof v?.best === "number" && v.best > best){
+          best = v.best;
+          bestKey = k;
+        }
+      }
+      return { best, bestKey };
+    }
+
+    function renderSelects(names){
+      const makeOpts = (select) => {
+        select.innerHTML = "";
+        names.forEach((n)=>{
+          const opt = document.createElement("option");
+          opt.value = n;
+          opt.textContent = n;
+          select.appendChild(opt);
+        });
+      };
+      makeOpts(p1);
+      makeOpts(p2);
+
+      // Default to two different players
+      p1.selectedIndex = 0;
+      p2.selectedIndex = names.length > 1 ? 1 : 0;
+    }
+
+    function renderBoard(records){
+      // build sorted list by best desc, then pair alpha
+      const entries = Object.entries(records).map(([k,v])=>({
+        key:k,
+        a:v.a, b:v.b,
+        best: v.best ?? 0,
+        dateISO: v.dateISO ?? ""
+      }));
+
+      entries.sort((x,y)=>{
+        if((y.best ?? 0) !== (x.best ?? 0)) return (y.best ?? 0) - (x.best ?? 0);
+        return `${x.a} ${x.b}`.localeCompare(`${y.a} ${y.b}`, undefined, { sensitivity:"base" });
+      });
+
+      const { best, bestKey } = computeOverallChamps(records);
+
+      boardBody.innerHTML = "";
+      if(entries.length === 0){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="4" class="small">No rallies yet. Enter your first score and let the family legend begin. 🧤🎶</td>`;
+        boardBody.appendChild(tr);
+      } else {
+        for(const e of entries){
+          const isChamps = (e.key === bestKey && best > -Infinity);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>
+              <span class="tag ${isChamps ? "champs":""}">${escapeHtml(e.a)} + ${escapeHtml(e.b)}</span>
+              ${isChamps ? ` <span class="tag champs">🔥 Current Champs</span>` : ""}
+            </td>
+            <td style="font-weight:800;">${Number(e.best).toString()}</td>
+            <td class="small">${e.dateISO ? prettyDate(e.dateISO) : "—"}</td>
+            <td style="text-align:right;">
+              <button class="secondary" data-view="${e.key}" style="padding:8px 10px; font-size:12px;">History</button>
+            </td>
+          `;
+          boardBody.appendChild(tr);
+        }
+
+        // History button listeners
+        boardBody.querySelectorAll("button[data-view]").forEach(btn=>{
+          btn.addEventListener("click", ()=>{
+            const key = btn.getAttribute("data-view");
+            openHistory(key);
+          });
+        });
+      }
+
+      // Champs pill
+      if(bestKey){
+        const v = records[bestKey];
+        champsText.textContent = `Champs: ${v.a} + ${v.b} (${v.best}) 🏆`;
+        champsDot.style.background = "var(--accent)";
+        champsDot.style.boxShadow = "0 0 0 3px rgba(124,247,212,.12)";
+      } else {
+        champsText.textContent = "No champs yet (log a rally!)";
+        champsDot.style.background = "var(--warn)";
+        champsDot.style.boxShadow = "0 0 0 3px rgba(255,213,106,.12)";
+      }
+    }
+
+    function prettyDate(iso){
+      // iso: YYYY-MM-DD
+      try{
+        const [y,m,d] = iso.split("-").map(Number);
+        const dt = new Date(y, (m-1), d);
+        return dt.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" });
+      } catch {
+        return iso;
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[c]));
+    }
+
+    function openHistory(pairKeyStr){
+      const records = loadRecords();
+      const rec = records[pairKeyStr];
+      if(!rec){
+        showMessage("Hmm—couldn’t find that pair. Try refreshing.", "oops");
+        return;
+      }
+      const hist = Array.isArray(rec.history) ? rec.history.slice().sort((a,b)=> (b.ts||0)-(a.ts||0)) : [];
+      const lines = hist.slice(0,12).map(h=>{
+        const when = h.dateISO ? prettyDate(h.dateISO) : "Unknown date";
+        return `• ${when}: ${h.count}`;
+      });
+
+      const body = lines.length ? `<div class="small" style="margin-top:6px;">Recent logs:</div><div style="margin-top:6px; white-space:pre-line;">${escapeHtml(lines.join("\n"))}</div>`
+                               : `<div class="small" style="margin-top:6px;">No history yet (but there is a record!).</div>`;
+
+      showMessage(
+        `<strong>${escapeHtml(rec.a)} + ${escapeHtml(rec.b)}</strong><br/>
+         Best: <strong>${rec.best}</strong> (${rec.dateISO ? prettyDate(rec.dateISO) : "date unknown"})<br/>${body}`,
+        "neutral"
+      );
+      window.scrollTo({ top: 0, behavior:"smooth" });
+    }
+
+    function validate(){
+      const a = p1.value;
+      const b = p2.value;
+      const n = Number(rally.value);
+
+      if(!a || !b){
+        showMessage("Pick two players to rally. 🧤", "oops");
+        return null;
+      }
+      if(a === b){
+        showMessage("Nice try 😄 — choose <strong>two different</strong> people for a pair.", "oops");
+        return null;
+      }
+      if(!Number.isFinite(n) || n < 0){
+        showMessage("Enter a rally count (0 or higher). You’ve got this! 💪", "oops");
+        return null;
+      }
+      const d = date.value || todayISO();
+      return { a, b, n, d };
+    }
+
+    function saveRally(){
+      const v = validate();
+      if(!v) return;
+
+      const records = loadRecords();
+      const key = pairKey(v.a, v.b);
+
+      const existing = records[key] || { a: v.a, b: v.b, best: 0, dateISO:"", history: [] };
+      existing.a = v.a; existing.b = v.b; // keep canonical display
+      existing.history = Array.isArray(existing.history) ? existing.history : [];
+
+      const oldBest = Number(existing.best || 0);
+      const newCount = v.n;
+
+      // Add to history always (so you can see progress over time)
+      existing.history.push({ count:newCount, dateISO:v.d, ts: Date.now() });
+
+      let improvedPair = false;
+      if(newCount > oldBest){
+        existing.best = newCount;
+        existing.dateISO = v.d;
+        improvedPair = true;
+      }
+
+      records[key] = existing;
+      saveRecords(records);
+
+      // Determine if overall best
+      const { best } = computeOverallChamps(records);
+      const isOverallBest = (newCount === best) && improvedPair;
+
+      // Close-to-best logic (within 2)
+      const closeToBest = (!improvedPair && oldBest > 0 && (oldBest - newCount) <= 2);
+
+      const e = encouragement({ improvedPair, newCount, oldBest, isOverallBest, closeToBest });
+      showMessage(e.text, e.tone);
+
+      renderBoard(records);
+
+      // Nudge for next time
+      rally.value = "";
+      rally.focus();
+    }
+
+    function swapPlayers(){
+      const a = p1.value;
+      p1.value = p2.value;
+      p2.value = a;
+      hideMessage();
+    }
+
+    function editNames(){
+      const settings = loadSettings();
+      const current = settings.names.join(", ");
+      const next = prompt(
+        "Edit your family names (comma-separated). Example: Jenna, Alex, Sam, Riley, Jordan",
+        current
+      );
+      if(next === null) return; // cancelled
+
+      const names = next.split(",").map(s=>s.trim()).filter(Boolean);
+
+      if(names.length < 2){
+        showMessage("Please enter at least <strong>two</strong> names. 🧤", "oops");
+        return;
+      }
+      // Deduplicate (case-insensitive)
+      const seen = new Set();
+      const deduped = [];
+      for(const n of names){
+        const k = n.toLowerCase();
+        if(!seen.has(k)){
+          seen.add(k);
+          deduped.push(n);
+        }
+      }
+
+      settings.names = deduped;
+      saveSettings(settings);
+
+      renderSelects(settings.names);
+
+      // Optional: keep records, but warn if names changed
+      showMessage("Names updated! 🎶 Your existing records are still saved on this device.", "neutral");
+    }
+
+    function exportData(){
+      const settings = loadSettings();
+      const records = loadRecords();
+      const payload = { exportedAt: new Date().toISOString(), settings, records };
+
+      const text = JSON.stringify(payload, null, 2);
+
+      // Try clipboard first
+      if(navigator.clipboard?.writeText){
+        navigator.clipboard.writeText(text).then(()=>{
+          showMessage("Export copied to clipboard! Paste it into Notes, email, or a file. ✅", "win");
+        }).catch(()=>{
+          fallbackExport(text);
+        });
+      } else {
+        fallbackExport(text);
+      }
+    }
+
+    function fallbackExport(text){
+      // Show in message box as truncated
+      const preview = escapeHtml(text.slice(0, 1200));
+      showMessage(
+        `<strong>Export (copy manually):</strong><br/><div class="small">Tip: long-press to select/copy.</div>
+         <div style="margin-top:8px; white-space:pre-wrap; font-size:12px; line-height:1.25; max-height:220px; overflow:auto; padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,.10); background:rgba(0,0,0,.18);">${preview}${text.length>1200 ? "\n…(truncated)" : ""}</div>`,
+        "neutral"
+      );
+    }
+
+    function resetAll(){
+      const ok = confirm("Reset everything? This erases all saved Jazzmitten records on this phone.");
+      if(!ok) return;
+      localStorage.removeItem(LS_RECORDS);
+      hideMessage();
+      renderBoard(loadRecords());
+      showMessage("All cleared. Fresh start! New legends await. 🧤✨", "neutral");
+    }
+
+    // Init
+    (function init(){
+      const settings = loadSettings();
+      renderSelects(settings.names);
+      date.value = todayISO();
+
+      renderBoard(loadRecords());
+
+      el("saveBtn").addEventListener("click", saveRally);
+      el("swapBtn").addEventListener("click", swapPlayers);
+      el("editNamesBtn").addEventListener("click", editNames);
+      el("exportBtn").addEventListener("click", exportData);
+      el("resetBtn").addEventListener("click", resetAll);
+
+      // Enter to save from rally input
+      rally.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){
+          e.preventDefault();
+          saveRally();
+        }
+      });
+
+      // If p1 and p2 become same due to edits, auto-adjust
+      [p1,p2].forEach(sel=>{
+        sel.addEventListener("change", ()=>{
+          if(p1.value === p2.value){
+            // pick next different option for p2 if possible
+            const opts = Array.from(p2.options).map(o=>o.value);
+            const alt = opts.find(v=>v !== p1.value);
+            if(alt) p2.value = alt;
+          }
+          hideMessage();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
